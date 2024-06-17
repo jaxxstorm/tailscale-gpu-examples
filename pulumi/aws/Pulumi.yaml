@@ -1,0 +1,10 @@
+name: aws
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: AWS infra for tailscale webinar
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-python
