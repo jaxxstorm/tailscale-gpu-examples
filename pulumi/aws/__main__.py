@@ -82,6 +82,9 @@ tailscale_operator = k8s.helm.v3.Release(
     version="1.61.11",
     chart="tailscale-operator",
     values={
+        "apiServerProxyConfig": {
+          "mode": "true",  
+        },
         "oauth": {
             "clientId": TAILSCALE_OAUTH_CLIENT_ID,
             "clientSecret": TAILSCALE_OAUTH_CLIENT_SECRET,
@@ -120,6 +123,26 @@ gpu_nodes = eks.AttachedNodeGroup(
             "effect": "NO_SCHEDULE",
         },
     ],
+    opts=pulumi.ResourceOptions(
+        parent=cluster,
+        providers={"kubernetes": provider},
+    ),
+)
+
+application = eks.AttachedNodeGroup(
+    "application",
+    cluster_name=cluster.cluster_name,
+    instance_types=["t3.medium"],
+    subnet_ids=vpc.private_subnet_ids,
+    scaling_config=aws.eks.NodeGroupScalingConfigArgs(
+        desired_size=1,
+        max_size=16,
+        min_size=1,
+    ),
+    tags={
+        **TAGS,
+        "k8s.io/cluster-autoscaler/enabled": "true",
+    },
     opts=pulumi.ResourceOptions(
         parent=cluster,
         providers={"kubernetes": provider},

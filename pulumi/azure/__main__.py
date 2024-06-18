@@ -72,8 +72,8 @@ app_nodes = azure.containerservice.KubernetesClusterNodePool(
     kubernetes_cluster_id=cluster.id,
     vm_size="Standard_D4_v3",
     enable_auto_scaling=True,
-    node_count=1,
-    min_count=1,
+    node_count=2,
+    min_count=2,
     max_count=5,
     tags=tags,
     opts=pulumi.ResourceOptions(parent=cluster, ignore_changes=["nodeCount"]),
@@ -99,6 +99,9 @@ tailscale_operator = k8s.helm.v3.Release(
     version="1.61.11",
     chart="tailscale-operator",
     values={
+        "apiServerProxyConfig": {
+          "mode": "true",
+        },
         "oauth": {
             "clientId": TAILSCALE_OAUTH_CLIENT_ID,
             "clientSecret": TAILSCALE_OAUTH_CLIENT_SECRET,

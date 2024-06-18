@@ -11,8 +11,7 @@ ollama:
    
   # -- List of models to pull at container startup
   models: 
-    - mistral
-    - llama2
+    - llama3
 
 service:
   annotations:

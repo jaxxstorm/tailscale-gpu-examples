@@ -1,0 +1,11 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG-main}
+    container_name: open-webui
+    ports:
+      - ${OPEN_WEBUI_PORT-3000}:8080
+    environment:
+      - 'OLLAMA_BASE_URL=http://${TAILSCALE_IP}:11434'
+      - 'WEBUI_SECRET_KEY='
+      - 'WEBUI_AUTH=false'
+    restart: unless-stopped

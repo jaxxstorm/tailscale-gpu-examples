@@ -74,7 +74,7 @@ resource "aws_instance" "web" {
   ami             = "ami-06d9c478e32dd66af"
   instance_type   = "g4dn.xlarge"
   subnet_id       = module.lbr-vpc.public_subnets[0]
-  security_groups = [aws_security_group.main.id]
+  vpc_security_group_ids = [ aws_security_group.main.id ]
 
   key_name = aws_key_pair.main.key_name
 
@@ -102,7 +102,7 @@ resource "aws_instance" "web" {
 
 data "tailscale_device" "aws" {
   hostname = "aws-gpu"
-  wait_for = "5m"
+  wait_for = "10m"
   depends_on = [ aws_instance.web ]
 }
 
