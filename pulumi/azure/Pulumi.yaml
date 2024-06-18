@@ -1,0 +1,10 @@
+name: azure-gpu-cluster
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: GPU cluster
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: python

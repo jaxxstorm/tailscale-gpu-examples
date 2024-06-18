@@ -87,7 +87,7 @@ tailscale_operator = k8s.helm.v3.Release(
             "clientSecret": TAILSCALE_OAUTH_CLIENT_SECRET,
         },
         "operatorConfig": {
-            "hostname": f"{PROJECT_NAME}-{STACK}-tailscale-operator",
+            "hostname": f"eks-tailscale-operator",
             "tolerations": [
                 {
                     "key": "node.lbrlabs.com/system",
@@ -179,4 +179,58 @@ nvidia_plugin = k8s.helm.v3.Release(
         },
     },
     opts=pulumi.ResourceOptions(parent=nvidia_ns, provider=provider),
+)
+
+requirements = [
+    eks.RequirementArgs(
+        key="kubernetes.io/arch",
+        operator="In",
+        values=["amd64"],
+    ),
+    eks.RequirementArgs(
+        key="kubernetes.io/os",
+        operator="In",
+        values=["linux"],
+    ),
+    eks.RequirementArgs(
+        key="karpenter.k8s.aws/instance-category",
+        operator="In",
+        values=["t"],
+    ),
+    eks.RequirementArgs(
+        key="karpenter.k8s.aws/instance-generation",
+        operator="In",
+        values=["3"],
+    ),
+    eks.RequirementArgs(
+        key="karpenter.k8s.aws/instance-memory",
+        operator="Gt",
+        values=["2048"],
+    ),
+    eks.RequirementArgs(
+            key="karpenter.sh/capacity-type",
+            operator="In",
+            values=["spot"],
+        ),
+]
+
+
+autoscaled_nodes = eks.AutoscaledNodeGroup(
+    "karpenter",
+    node_role=cluster.karpenter_node_role.name,
+    security_group_ids=[cluster.control_plane.vpc_config.cluster_security_group_id],
+    subnet_ids=vpc.private_subnet_ids,
+    disk_size="100G",
+    disruption=eks.DisruptionConfigArgs(
+        consolidation_policy="WhenUnderutilized",
+        budgets=[
+            eks.BudgetConfigArgs(
+                nodes="1"  # only allow 1 node to be disrupted at a time
+            )
+        ],
+    ),
+    requirements=requirements,
+    opts=pulumi.ResourceOptions(
+        provider=provider,
+    ),
 )

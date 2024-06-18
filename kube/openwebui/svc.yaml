@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    tailscale.com/tailnet-fqdn: ollama-ollama.tail7fe3.ts.net
+  name: ollama
+spec:
+  externalName: placeholder
+  type: ExternalName

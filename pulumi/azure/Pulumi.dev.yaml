@@ -1,0 +1,4 @@
+config:
+  tailscale:oauth_client_id: kGoTcfQGL711CNTRL
+  tailscale:oauth_client_secret:
+    secure: AAABAPjezEU1ERzu89e9yC26Rz4wlmxGReeT2lNYHYDulqvuf8FOsyhRqpmE0HCxnGMKvqYm6cUFOt838Ptj7CWnYRhDAIWZ46hnK2jtdKdMZk09Xhbj+HT8FR4e4cM=

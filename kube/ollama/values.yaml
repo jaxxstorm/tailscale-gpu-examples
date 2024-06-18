@@ -1,0 +1,28 @@
+ollama:
+  gpu:
+    # -- Enable GPU integration
+    enabled: true
+    
+    # -- GPU type: 'nvidia' or 'amd'
+    type: 'nvidia'
+    
+    # -- Specify the number of GPU to 1
+    number: 1
+   
+  # -- List of models to pull at container startup
+  models: 
+    - mistral
+    - llama2
+
+service:
+  annotations:
+    tailscale.com/expose: "true"
+# Enable ingress controller resource
+ingress:
+  enabled: false
+  
+# Tolerations for pod assignment
+tolerations:
+  - key: "nvidia.com/gpu"
+    operator: "Exists"
+    effect: "NoSchedule"

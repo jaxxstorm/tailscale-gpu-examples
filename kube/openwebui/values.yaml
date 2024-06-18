@@ -1,0 +1,12 @@
+ollamaUrls:
+- http://ollama.default.svc.cluster.local:11434
+ingress:
+  enabled: true
+  class: "tailscale"  # Set the ingress class to Tailscale
+  host: openwebui
+  tls: true
+ollama:
+  enabled: false
+extraEnvVars:
+  - name: WEBUI_AUTH
+    value: "false"
